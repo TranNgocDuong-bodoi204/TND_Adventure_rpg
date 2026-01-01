@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 
 public class EntityHealth : MonoBehaviour,IHealth
 {
-    [SerializeField]private float maxHealh;
-    [SerializeField]private float currentHealth;
+    
+
+    [SerializeField]protected float maxHealh;
+    [SerializeField]protected float currentHealth;
     [SerializeField] private Rigidbody2D rb;
     public Vector2 pushBackForceWhenHit = new Vector2(4,3);
 
@@ -15,6 +18,7 @@ public class EntityHealth : MonoBehaviour,IHealth
     public void Start()
     {
         SetCurrentHealth(maxHealh);
+        InitialHealth();
     }
     public float GetCurrentHealth() => currentHealth;
 
@@ -33,6 +37,8 @@ public class EntityHealth : MonoBehaviour,IHealth
         SetCurrentHealth(GetCurrentHealth() - damageInfo.dmg_damageAmount);
         PushBackWhenTakeDamage(damageInfo.dmg_hitDirection, pushBackForceWhenHit);
 
+        WhenHealthChanged();
+
         if(GetCurrentHealth() == 0)
         {
             ObjectIsDead();
@@ -47,5 +53,14 @@ public class EntityHealth : MonoBehaviour,IHealth
     private void ObjectIsDead()
     {
         Debug.Log("object dead");
+    }
+
+    // object con override
+    protected virtual void InitialHealth()
+    {
+        
+    }
+    protected virtual void WhenHealthChanged()
+    {
     }
 }

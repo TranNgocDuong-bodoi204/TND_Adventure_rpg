@@ -49,5 +49,11 @@ TagManager:
   - name: Player
     uniqueID: 1314866905
     locked: 0
+  - name: Staff In Sceen
+    uniqueID: 912697521
+    locked: 0
+  - name: UI Elements
+    uniqueID: 2151771303
+    locked: 0
   m_RenderingLayers:
   - Default
