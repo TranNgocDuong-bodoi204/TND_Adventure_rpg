@@ -37,6 +37,7 @@ public class PlayerContext : EntityContext
     public Vector2 wallJumForce;
     [Range(1,3)]
     public float dashSpeedMultiplier;
+    public float dashDuration;
     public float dashMoveSpeed {get;private set;}
     public float dashCoolDown=1f;
     public float attackPushForce ;

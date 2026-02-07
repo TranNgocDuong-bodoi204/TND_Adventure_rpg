@@ -8,6 +8,7 @@ public class Player_Run : Player_Grounded
     public override void EnterState()
     {
         base.EnterState();
+        Debug.Log("Player Enter run");
     }
     public override void ExitState()
     {

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EntityContext : MonoBehaviour
 {
-    private const int GRAVITY_SCALE = 3;
+    private const int GRAVITY_SCALE = 4;
 
     public StateMachine mStateMachine{get;set;}
     public Rigidbody2D rb{get;set;}

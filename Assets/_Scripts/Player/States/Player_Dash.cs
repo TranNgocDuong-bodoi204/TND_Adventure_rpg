@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Player_Dash : PlayerState
 {
-    private float dashDuration = .35f;
     private float enterTime;
     private float originalGravity;
     private PlayerContext playerContext;
@@ -34,7 +33,7 @@ public class Player_Dash : PlayerState
 
         StopDashWhenHitWall();
 
-        if(Time.time > enterTime  + dashDuration) mPlayer.canChangeState = true;
+        if(Time.time > enterTime  + mPlayer.dashDuration) mPlayer.canChangeState = true;
 
         ChangeToIdle();
         ChangeToWallSlide();
