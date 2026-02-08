@@ -5,22 +5,24 @@ using UnityEngine;
 
 public class CharacterStat
 {
-    public float baseValue;
+    public readonly float baseValue;
 
+    private bool isDirty = true;
+    private float FinalValue;
+    private float lastBaseValue = float.MinValue;   
     public float Value
     {
         get
         {
-            if(isDirty)
+            if(isDirty || lastBaseValue != baseValue)
             {
+                lastBaseValue = baseValue;
                 FinalValue = CalculateFinalValue();
                 isDirty = false;
             }
             return FinalValue;
         }
     }
-    private bool isDirty = true;
-    private float FinalValue;
 
     public List<StatModifiers> statModifiers;
 
@@ -50,25 +52,56 @@ public class CharacterStat
         return 0;
     }
 
-    public void RemoveModifier(StatModifiers mod)
+    public bool RemoveModifier(StatModifiers mod)
     {
-        isDirty = true;
-        statModifiers.Remove(mod);
+        if(statModifiers.Remove(mod))
+        {
+            isDirty = true;
+            return true;
+        }
+        return false;
+    }
+    public bool RemoveAllModifiersFromSource(object source)
+    {
+        bool didRemove = false;
+
+        for(int i = statModifiers.Count - 1; i >= 0; i--)
+        {
+            if(statModifiers[i].source == source)
+            {
+                isDirty = true;
+                didRemove = true;
+                statModifiers.RemoveAt(i);
+            }
+        }
+        return didRemove;
     }
 
     public float CalculateFinalValue()
     {
         float finalValue = baseValue;
+        float percentAddSum = 0;
 
-        foreach (StatModifiers mod in statModifiers)
+        for(int i = 0; i < statModifiers.Count; i++)
         {
-            finalValue += mod.value;
+            StatModifiers mod = statModifiers[i];
             if(mod.type == StatModifyType.Flat)
             {
                 finalValue += mod.value;
             }
 
             if(mod.type == StatModifyType.PercentAdd)
+            {
+                percentAddSum += mod.value;
+
+                if(i + 1 >= statModifiers.Count || statModifiers[i+1].type != StatModifyType.PercentAdd)
+                {
+                    finalValue *= 1 + percentAddSum; // value as 0.1 for 10%
+                    percentAddSum = 0;
+                }
+            }
+
+            if(mod.type == StatModifyType.PercentMult)
             {
                 finalValue *= 1 + mod.value; // value as 0.1 for 10%
             }
