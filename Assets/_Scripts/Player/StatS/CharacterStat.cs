@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
-using UnityEngine;
-
+[System.Serializable]
 public class CharacterStat
 {
-    public readonly float baseValue;
+    public float baseValue;
 
-    private bool isDirty = true;
-    private float FinalValue;
-    private float lastBaseValue = float.MinValue;   
+    protected bool isDirty = true;
+    protected float FinalValue;
+    protected float lastBaseValue = float.MinValue;   
+    public List<StatModifiers> statModifiers;
     public float Value
     {
         get
@@ -24,22 +23,24 @@ public class CharacterStat
         }
     }
 
-    public List<StatModifiers> statModifiers;
 
-    public CharacterStat(float baseValue)
+    public CharacterStat()
     {
-        this.baseValue = baseValue;
         statModifiers = new List<StatModifiers>();
     }
+    public CharacterStat(float baseValue) : this()
+    {
+        this.baseValue = baseValue;
+    }
 
-    public void AddModifier(StatModifiers mod)
+    public virtual void AddModifier(StatModifiers mod)
     {
         isDirty = true;
         statModifiers.Add(mod);
-        statModifiers.Sort(CompareModifierOrder); // lambda
+        statModifiers.Sort(CompareModifierOrder);
     }
 
-    public int CompareModifierOrder(StatModifiers a, StatModifiers b)
+    protected virtual int CompareModifierOrder(StatModifiers a, StatModifiers b)
     {
         if(a.order < b.order)
         {
@@ -52,7 +53,7 @@ public class CharacterStat
         return 0;
     }
 
-    public bool RemoveModifier(StatModifiers mod)
+    public virtual bool RemoveModifier(StatModifiers mod)
     {
         if(statModifiers.Remove(mod))
         {
@@ -61,7 +62,7 @@ public class CharacterStat
         }
         return false;
     }
-    public bool RemoveAllModifiersFromSource(object source)
+    public virtual bool RemoveAllModifiersFromSource(object source)
     {
         bool didRemove = false;
 
@@ -77,7 +78,7 @@ public class CharacterStat
         return didRemove;
     }
 
-    public float CalculateFinalValue()
+    protected virtual float CalculateFinalValue()
     {
         float finalValue = baseValue;
         float percentAddSum = 0;

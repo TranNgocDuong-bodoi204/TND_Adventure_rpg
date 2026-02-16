@@ -10,8 +10,6 @@ public class Test : MonoBehaviour
     private float timeStun = 0.4f;             // Thời gian stun thêm (không di chuyển được) - tùy chỉnh nếu muốn
     private bool canFallBack = true;
 
-    public PlayerStatContainer statContainer;
-
     private bool isPressTest = false;
 
     void Awake()
